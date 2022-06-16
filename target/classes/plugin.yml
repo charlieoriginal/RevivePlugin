@@ -1,0 +1,7 @@
+name: RevivePlugin
+version: '1.0.0'
+main: org.baguette.reviveplugin.RevivePlugin
+api-version: 1.18
+authors: [ wizard-chan ]
+description: This is an example of a death/revives plugin.
+website: wizard.is.hot

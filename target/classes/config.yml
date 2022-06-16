@@ -1,0 +1,12 @@
+# Debug mode shows developer comments & event readouts in the console.
+debug-mode: false
+# Information about the hologram display.
+hologram-top: "&c&l*DEAD*"
+hologram-timer: "&7Dies in &c%timer%"
+# How long until true death in seconds.
+timer-length: 60
+# What material will need to be used on a player for a revive.
+revival-item: "GOLDEN_APPLE"
+# Gives the player a level 1 effect permanently for any listed.
+death-effects:
+  - "BLINDNESS"

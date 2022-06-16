@@ -1,0 +1,11 @@
+org\baguette\reviveplugin\profiles\ProfileManager.class
+org\baguette\reviveplugin\profiles\DeathProfile.class
+org\baguette\reviveplugin\listeners\DeathListener.class
+org\baguette\reviveplugin\events\RPPlayerKillEvent.class
+org\baguette\reviveplugin\RevivePlugin.class
+org\baguette\reviveplugin\listeners\ReviveListener.class
+org\baguette\reviveplugin\profiles\DeathState.class
+org\baguette\reviveplugin\events\RPDenyDismountEvent.class
+org\baguette\reviveplugin\listeners\DismountListener.class
+org\baguette\reviveplugin\events\RPPlayerReviveEvent.class
+org\baguette\reviveplugin\listeners\JoinListener.class
