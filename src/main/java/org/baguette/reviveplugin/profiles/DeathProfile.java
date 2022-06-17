@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.UUID;
 
@@ -20,6 +21,8 @@ public class DeathProfile {
     private boolean isDead;
     @Getter @Setter
     private DeathState deathState;
+    @Getter
+    private BukkitTask activeTask;
 
     public DeathProfile(UUID uuid) {
         this.uuid = uuid;
@@ -39,21 +42,23 @@ public class DeathProfile {
 
         RevivePlugin plugin = JavaPlugin.getPlugin(RevivePlugin.class);
         long timerDelay = plugin.getConfig().getInt("timer-length")*20L;
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        activeTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isDead()) {
                 target.setHealth(0);
-                setDeathState(null);
                 setDead(false);
-                if (deathState.getStand() != null) {
-                    deathState.getStand().removePassenger(target);
-                    deathState.getStand().remove();
+                if (deathState != null) {
+                    if (deathState.getStand() != null) {
+                        deathState.getStand().removePassenger(target);
+                        deathState.getStand().remove();
+                    }
+
+                    if (deathState.getHologram() != null)
+                        deathState.getHologram().remove();
+
+                    if (deathState.getTimerHolo() != null)
+                        deathState.getTimerHolo().remove();
                 }
-
-                if (deathState.getHologram() != null)
-                    deathState.getHologram().remove();
-
-                if (deathState.getTimerHolo() != null)
-                    deathState.getTimerHolo().remove();
+                setDeathState(null);
 
                 if (plugin.isDebug())
                     Bukkit.getLogger().info("(RevivePlugin) " + target.getName() + " has been killed by the timer.");
@@ -87,21 +92,23 @@ public class DeathProfile {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (isDead()) {
                 target.setHealth(0);
-                setDeathState(null);
                 setDead(false);
-                if (deathState.getStand() != null) {
-                    deathState.getStand().removePassenger(target);
-                    deathState.getStand().remove();
+                if (deathState != null) {
+                    if (deathState.getStand() != null) {
+                        deathState.getStand().removePassenger(target);
+                        deathState.getStand().remove();
+                    }
+
+                    if (deathState.getHologram() != null)
+                        deathState.getHologram().remove();
+
+                    if (deathState.getTimerHolo() != null)
+                        deathState.getTimerHolo().remove();
+
+                    if (plugin.isDebug())
+                        Bukkit.getLogger().info("(RevivePlugin) " + target.getName() + " has been killed by the timer.");
                 }
-
-                if (deathState.getHologram() != null)
-                    deathState.getHologram().remove();
-
-                if (deathState.getTimerHolo() != null)
-                    deathState.getTimerHolo().remove();
-
-                if (plugin.isDebug())
-                    Bukkit.getLogger().info("(RevivePlugin) " + target.getName() + " has been killed by the timer.");
+                setDeathState(null);
             }
         }, timerDelay);
 
@@ -139,8 +146,13 @@ public class DeathProfile {
                             getDeathState().getStand().removePassenger(player);
                             getDeathState().getStand().remove();
                         }
+                        if (getDeathState().getUpdateTimerTask() != null && !getDeathState().getUpdateTimerTask().isCancelled()) {
+                            getDeathState().getUpdateTimerTask().cancel();
+                        }
                         setDeathState(null);
                         setDead(false);
+                        if (activeTask != null && !activeTask.isCancelled())
+                            activeTask.cancel();
 
                         if ((JavaPlugin.getPlugin(RevivePlugin.class)).isDebug())
                             Bukkit.getLogger().info("(RevivePlugin) " + this.uuid.toString() + " has been successfully revived.");

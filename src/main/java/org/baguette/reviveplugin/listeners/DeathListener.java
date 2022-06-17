@@ -34,7 +34,7 @@ public class DeathListener implements Listener {
                     }
 
                     if (e.getDamager() instanceof Player) {
-                        if (!profile.isDead()) {
+                        if (!profile.isDead() || profile.getDeathState() == null) {
                             profile.killByPlayer((Player) e.getEntity(), (Player) e.getDamager());
                             ((Player) e.getEntity()).setHealth(1);
                             profile.getDeathState().spawnHolo("&c&l*DEAD*");
@@ -43,8 +43,10 @@ public class DeathListener implements Listener {
                             Bukkit.getLogger().info("(RevivePlugin): " + e.getEntity().getName() + " was killed by " + e.getDamager().getName());
                         } else {
                             DeathState deathState = profile.getDeathState();
-                            profile.setDeathState(null);
                             profile.setDead(false);
+                            if (deathState.getUpdateTimerTask() != null)
+                                deathState.getUpdateTimerTask().cancel();
+
                             if (deathState.getStand() != null) {
                                 deathState.getStand().removePassenger(e.getEntity());
                                 deathState.getStand().remove();
@@ -56,10 +58,17 @@ public class DeathListener implements Listener {
                             if (deathState.getTimerHolo() != null)
                                 deathState.getTimerHolo().remove();
 
-                            Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
+                            profile.setDeathState(null);
+                            ((Player) e.getEntity()).setHealth(0);
+
+                            if (plugin.isDebug()) {
+                                Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
+                                Bukkit.getLogger().info("(RevivePlugin): " + profile.getDeathState());
+                                Bukkit.getLogger().info("(RevivePlugin): " + profile.isDead());
+                            }
                         }
                     } else {
-                        if (!profile.isDead()) {
+                        if (!profile.isDead() || profile.getDeathState() == null) {
                             profile.killOther((Player) e.getEntity());
                             ((Player) e.getEntity()).setHealth(1);
                             profile.getDeathState().spawnHolo("&c&l*DEAD*");
@@ -68,13 +77,29 @@ public class DeathListener implements Listener {
                             Bukkit.getLogger().info(("(RevivePlugin): " + e.getEntity().getName() + " was killed by " + e.getDamager()));
                         } else {
                             DeathState deathState = profile.getDeathState();
-                            profile.setDeathState(null);
                             profile.setDead(false);
-                            deathState.getStand().removePassenger(e.getEntity());
-                            deathState.getStand().remove();
-                            deathState.getHologram().remove();
+                            if (deathState.getUpdateTimerTask() != null)
+                                deathState.getUpdateTimerTask().cancel();
 
-                            Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
+                            if (deathState.getStand() != null) {
+                                deathState.getStand().removePassenger(e.getEntity());
+                                deathState.getStand().remove();
+                            }
+
+                            if (deathState.getHologram() != null)
+                                deathState.getHologram().remove();
+
+                            if (deathState.getTimerHolo() != null)
+                                deathState.getTimerHolo().remove();
+
+                            profile.setDeathState(null);
+                            ((Player) e.getEntity()).setHealth(0);
+
+                            if (plugin.isDebug()) {
+                                Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
+                                Bukkit.getLogger().info("(RevivePlugin): " + profile.getDeathState());
+                                Bukkit.getLogger().info("(RevivePlugin): " + profile.isDead());
+                            }
                         }
                     }
                 }
@@ -95,7 +120,7 @@ public class DeathListener implements Listener {
                     if (playerHP - damage <= 0) {
                         DeathProfile profile = plugin.getProfileManager().getProfile((Player) e.getEntity());
 
-                        if (!profile.isDead()) {
+                        if (profile.isDead()) {
                             profile.killOther((Player) e.getEntity());
                             ((Player) e.getEntity()).setHealth(1);
                             profile.getDeathState().spawnHolo("&c&l*DEAD*");

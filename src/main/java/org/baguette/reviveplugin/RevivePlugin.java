@@ -7,6 +7,7 @@ import org.baguette.reviveplugin.listeners.JoinListener;
 import org.baguette.reviveplugin.listeners.ReviveListener;
 import org.baguette.reviveplugin.profiles.DeathProfile;
 import org.baguette.reviveplugin.profiles.ProfileManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 

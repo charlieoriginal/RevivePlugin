@@ -10,3 +10,13 @@ revival-item: "GOLDEN_APPLE"
 # Gives the player a level 1 effect permanently for any listed.
 death-effects:
   - "BLINDNESS"
+# Sent to a player when reviving another player.
+# Pick sounds from the 1.18.2 Bukkit repository: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+revive-sound: "BLOCK_NOTE_BLOCK_PLING"
+
+# Configure various messages from the plugin.
+messages:
+  # Sent to the player who revives the dead player.
+  revived-player: "&aYou have revived %player%!"
+  # Sent to the previously dead player when revived.
+  revived-target: "&aYou have been revived by %player%!"

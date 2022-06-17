@@ -32,18 +32,20 @@ public class ReviveListener implements Listener {
             Inventory pInv = player.getInventory();
             if (((PlayerInventory) pInv).getItem(e.getHand()).getType().equals(item)) {
                 Player target = (Player) inter;
-                decrementItem(e.getHand(), e.getPlayer());
-                Sound reviveSound = Sound.valueOf(plugin.getConfig().getString("revive-sound"));
-                player.playSound(player, reviveSound, 1f, 1f);
-                String revivalMessage = plugin.getConfig().getString("messages.revived-player");
-                String revivalMessageTarget = plugin.getConfig().getString("messages.revived-target");
-                revivalMessage = revivalMessage.replace("%player%", target.getName());
-                revivalMessageTarget = revivalMessageTarget.replace("%player%", player.getName());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', revivalMessage));
-                target.sendMessage(ChatColor.translateAlternateColorCodes('&', revivalMessageTarget));
                 DeathProfile profile = plugin.getProfileManager().getProfile(target);
-                if (profile.isDead() && profile.getDeathState() != null) {
-                    profile.revive(target);
+                if (profile.isDead()) {
+                    decrementItem(e.getHand(), e.getPlayer());
+                    Sound reviveSound = Sound.valueOf(plugin.getConfig().getString("revive-sound"));
+                    player.playSound(player, reviveSound, 1f, 1f);
+                    String revivalMessage = plugin.getConfig().getString("messages.revived-player");
+                    String revivalMessageTarget = plugin.getConfig().getString("messages.revived-target");
+                    revivalMessage = revivalMessage.replace("%player%", target.getName());
+                    revivalMessageTarget = revivalMessageTarget.replace("%player%", player.getName());
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', revivalMessage));
+                    target.sendMessage(ChatColor.translateAlternateColorCodes('&', revivalMessageTarget));
+                    if (profile.isDead() && profile.getDeathState() != null) {
+                        profile.revive(target);
+                    }
                 }
             }
         }

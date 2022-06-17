@@ -22,12 +22,16 @@ public class JoinListener implements Listener {
         Player player = e.getPlayer();
         DeathProfile profile = plugin.getProfileManager().getProfile(player);
 
-        Bukkit.getLogger().info("(RevivePlugin): " + profile.isDead() + " " + profile.getDeathState());
+        if (plugin.isDebug())
+            Bukkit.getLogger().info("(RevivePlugin): " + profile.isDead() + " " + profile.getDeathState());
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (profile.getDeathState() == null && profile.isDead()) {
                 player.teleport(player.getLocation().add(0, .4f, 0));
                 profile.killOther(e.getPlayer());
-                profile.getDeathState().spawnHolo("&c&l*DEAD*");
+                if (profile.getDeathState() != null) {
+                    profile.getDeathState().spawnHolo("&c&l*DEAD*");
+                }
             }
         }, 5L);
 
