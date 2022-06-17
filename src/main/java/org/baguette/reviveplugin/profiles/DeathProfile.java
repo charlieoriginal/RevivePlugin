@@ -37,6 +37,32 @@ public class DeathProfile {
             return false;
         }
 
+        if (deathState != null || isDead) {
+            target.setHealth(0);
+
+            //if (deathState.getStand() != null) {
+            //    deathState.getStand().removePassenger(target);
+            //    deathState.getStand().remove();
+            //}
+            //
+            //if (deathState.getHologram() != null)
+            //    deathState.getHologram().remove();
+            //
+            //if (deathState.getTimerHolo() != null)
+            //    deathState.getTimerHolo().remove();
+            //
+            //if (deathState.getUpdateTimerTask() != null)
+            //    deathState.getUpdateTimerTask().cancel();
+            //
+            //setDeathState(null);
+            //setDead(false);
+
+            Bukkit.getLogger().info("KILLED TRUE");
+
+            return true;
+        }
+        Bukkit.getLogger().info("KILLED FALSE");
+
         this.isDead = true;
         this.deathState = new DeathState(target);
 
@@ -57,6 +83,9 @@ public class DeathProfile {
 
                     if (deathState.getTimerHolo() != null)
                         deathState.getTimerHolo().remove();
+
+                    if (deathState.getUpdateTimerTask() != null)
+                        deathState.getUpdateTimerTask().cancel();
                 }
                 setDeathState(null);
 
@@ -85,6 +114,29 @@ public class DeathProfile {
             target.addPotionEffect(effect);
         }
 
+        if (deathState != null || isDead) {
+            target.setHealth(0);
+
+            //if (deathState.getStand() != null) {
+            //    deathState.getStand().removePassenger(target);
+            //    deathState.getStand().remove();
+            //}
+            //
+            //if (deathState.getHologram() != null)
+            //    deathState.getHologram().remove();
+            //
+            //if (deathState.getTimerHolo() != null)
+            //    deathState.getTimerHolo().remove();
+            //
+            //if (deathState.getUpdateTimerTask() != null)
+            //    deathState.getUpdateTimerTask().cancel();
+            //
+            //setDeathState(null);
+            //setDead(false);
+
+            return true;
+        }
+
         this.isDead = true;
         this.deathState = new DeathState(target);
 
@@ -104,6 +156,9 @@ public class DeathProfile {
 
                     if (deathState.getTimerHolo() != null)
                         deathState.getTimerHolo().remove();
+
+                    if (deathState.getUpdateTimerTask() != null)
+                        deathState.getUpdateTimerTask().cancel();
 
                     if (plugin.isDebug())
                         Bukkit.getLogger().info("(RevivePlugin) " + target.getName() + " has been killed by the timer.");
@@ -138,6 +193,9 @@ public class DeathProfile {
                         player.setFireTicks(0);
                         player.setFallDistance(0);
                         player.teleport(player.getLocation().add(0, 1, 0));
+                        if (getDeathState().getUpdateTimerTask() != null && !getDeathState().getUpdateTimerTask().isCancelled()) {
+                            getDeathState().getUpdateTimerTask().cancel();
+                        }
                         if (getDeathState().getHologram() != null)
                             getDeathState().getHologram().remove();
                         if (getDeathState().getTimerHolo() != null)
@@ -145,9 +203,6 @@ public class DeathProfile {
                         if (getDeathState().getStand() != null) {
                             getDeathState().getStand().removePassenger(player);
                             getDeathState().getStand().remove();
-                        }
-                        if (getDeathState().getUpdateTimerTask() != null && !getDeathState().getUpdateTimerTask().isCancelled()) {
-                            getDeathState().getUpdateTimerTask().cancel();
                         }
                         setDeathState(null);
                         setDead(false);

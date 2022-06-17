@@ -28,9 +28,6 @@ public class DismountListener implements Listener {
                 Bukkit.getPluginManager().callEvent(event);
 
                 e.setCancelled(!event.isCancelled());
-
-                if (plugin.isDebug())
-                    Bukkit.getLogger().info(("(RevivePlugin): " + e.getEntity().getName() + " tried dismounting from " + e.getDismounted()));
             }
         }
     }

@@ -59,7 +59,6 @@ public class DeathListener implements Listener {
                                 deathState.getTimerHolo().remove();
 
                             profile.setDeathState(null);
-                            ((Player) e.getEntity()).setHealth(0);
 
                             if (plugin.isDebug()) {
                                 Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
@@ -93,7 +92,6 @@ public class DeathListener implements Listener {
                                 deathState.getTimerHolo().remove();
 
                             profile.setDeathState(null);
-                            ((Player) e.getEntity()).setHealth(0);
 
                             if (plugin.isDebug()) {
                                 Bukkit.getLogger().info("(RevivePlugin): True death by " + e.getDamager());
@@ -122,9 +120,11 @@ public class DeathListener implements Listener {
 
                         if (profile.isDead()) {
                             profile.killOther((Player) e.getEntity());
-                            ((Player) e.getEntity()).setHealth(1);
-                            profile.getDeathState().spawnHolo("&c&l*DEAD*");
-                            e.setCancelled(true);
+                            if (profile.getDeathState() != null) {
+                                ((Player) e.getEntity()).setHealth(1);
+                                profile.getDeathState().spawnHolo("&c&l*DEAD*");
+                                e.setCancelled(true);
+                            }
                         }
                     }
                 }

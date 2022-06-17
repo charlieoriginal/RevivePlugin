@@ -46,7 +46,7 @@ public class DeathState {
 
         text = plugin.getConfig().getString("hologram-top");
         String translated = ChatColor.translateAlternateColorCodes('&', text);
-        Location location = this.stand.getLocation().clone().add(0, 2.6f, 0);
+        Location location = this.stand.getLocation().clone().add(0, 2.7f, 0);
         this.hologram = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         this.hologram.setCollidable(false);
         this.hologram.setGravity(false);
